@@ -24,6 +24,11 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
     --radius: 0.5rem;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
   }
 
   .dark {
@@ -46,34 +51,19 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
   }
+}
 
-  body {
-    @apply bg-background text-foreground;
-    font-family: 'Inter', sans-serif;
-    background: linear-gradient(135deg, #1a1a1a 25%, #121212 100%);
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
-  }
-
+@layer base {
   * {
     @apply border-border;
   }
-
-  .header, .footer {
-    background: rgba(0, 0, 0, 0.8);
-  }
-
-  .card {
-    background: var(--card);
-    color: var(--card-foreground);
+  body {
+    @apply bg-background text-foreground;
   }
 }
-
-@keyframes gradientBG {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-

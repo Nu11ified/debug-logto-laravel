@@ -63,14 +63,6 @@ abstract class Constraint implements Countable, SelfDescribing
     }
 
     /**
-     * @deprecated
-     */
-    protected function exporter(): \SebastianBergmann\Exporter\Exporter
-    {
-        return new \SebastianBergmann\Exporter\Exporter;
-    }
-
-    /**
      * Evaluates the constraint for parameter $other. Returns true if the
      * constraint is met, false otherwise.
      *
@@ -131,7 +123,7 @@ abstract class Constraint implements Countable, SelfDescribing
      */
     protected function failureDescription(mixed $other): string
     {
-        return Exporter::export($other, true) . ' ' . $this->toString(true);
+        return Exporter::export($other) . ' ' . $this->toString();
     }
 
     /**
@@ -171,7 +163,7 @@ abstract class Constraint implements Countable, SelfDescribing
             return '';
         }
 
-        return Exporter::export($other, true) . ' ' . $string;
+        return Exporter::export($other) . ' ' . $string;
     }
 
     /**
@@ -240,7 +232,7 @@ abstract class Constraint implements Countable, SelfDescribing
     }
 
     /**
-     * @psalm-return non-empty-string
+     * @return non-empty-string
      */
     protected function valueToTypeStringFragment(mixed $value): string
     {
