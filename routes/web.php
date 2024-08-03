@@ -25,9 +25,9 @@ $client = new LogtoClient(
 );
 
 // Root route
-Route::get('/', function () {
+Route::get('/', function () use ($client) {
     return Inertia::render('Welcome', [
-        'canLogin' => true,
+        'canLogin' => !$client->isAuthenticated(),
         'canRegister' => true,
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
@@ -35,16 +35,12 @@ Route::get('/', function () {
 })->name('home');
 
 // Dashboard route
-Route::get('/dashboard', function () {
+Route::get('/dashboard', function () use ($client) {
+    if (!$client->isAuthenticated()) {
+        return redirect()->route('sign-in');
+    }
     return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-// Profile routes
-Route::middleware(['auth'])->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+})->name('dashboard');
 
 // Sign-in route
 Route::get('/sign-in', function () use ($client) {
@@ -70,15 +66,19 @@ Route::get('/callback', function () use ($client) {
 
 // User info route
 Route::get('/userinfo', function () use ($client) {
-    if ($client->isAuthenticated() === false) {
+    if (!$client->isAuthenticated()) {
         return "Not authenticated <a href='/sign-in'>Sign in</a>";
-      }
+    }
 
     $idTokenClaims = $client->getIdTokenClaims();
     $userInfo = $client->fetchUserInfo();
 
-    return response()->json([
-        'id_token_claims' => $idTokenClaims,
-        'user_info' => $userInfo
-    ]);
+    $html = "<h1>User Information</h1>";
+    $html .= "<h2>ID Token Claims</h2>";
+    $html .= "<pre>" . htmlspecialchars(json_encode($idTokenClaims, JSON_PRETTY_PRINT)) . "</pre>";
+    $html .= "<h2>User Info</h2>";
+    $html .= "<pre>" . htmlspecialchars(json_encode($userInfo, JSON_PRETTY_PRINT)) . "</pre>";
+    $html .= "<a href='/sign-out'>Sign out</a>";
+
+    return $html;
 })->name('userinfo');
